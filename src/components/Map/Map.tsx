@@ -8,12 +8,11 @@ import "@maptiler/sdk/dist/maptiler-sdk.css";
 import './map.css';
 import * as turf from "@turf/turf";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Terminal } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const MapComponent = () => {
     const [API_KEY] = useState('XhmiunjhJU7iuFvSBpDZ');
-    const [mapController, setMapController] = useState();
+    const [mapController, setMapController] = useState<ReturnType<typeof createMapLibreGlMapController> | undefined>(undefined);
     const mapContainer = useRef(null);
     const india = { lng: 77.5946, lat: 12.9716 };
     const zoom = 5;
@@ -27,29 +26,36 @@ const MapComponent = () => {
     );
     const map = useRef<maplibregl.Map | null>(null);
 
-    const showAlert = () => {
-        <Alert>
-            <Terminal className="h-4 w-4" />
-            <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription>
-                You can add components and dependencies to your app using the cli.
-            </AlertDescription>
-        </Alert>
-    }
+
+    // const showAlert = () => {
+    //     <Alert>
+    //         <Terminal className="h-4 w-4" />
+    //         <AlertTitle>Heads up!</AlertTitle>
+    //         <AlertDescription>
+    //             You can add components and dependencies to your app using the cli.
+    //         </AlertDescription>
+    //     </Alert>
+    // }
 
 
     useEffect(() => {
         if (map.current) return; // stops map from intializing more than once
 
-        map.current = new maplibregl.Map({
-            container: mapContainer.current,
-            style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
-            center: [india.lng, india.lat],
-            zoom: zoom
-        });
+        if (mapContainer.current) {
+            map.current = new maplibregl.Map({
+              container: mapContainer.current,
+              style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
+              center: [india.lng, india.lat],
+              zoom: zoom,
+            });
+        }
 
-        map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
-        setMapController(createMapLibreGlMapController(map.current, maplibregl));
+        map.current?.addControl(new maplibregl.NavigationControl(), 'top-right');
+        
+        if (map.current) {
+            const controller = createMapLibreGlMapController(map.current, maplibregl);
+            setMapController(controller);
+        }
 
         map.current!.on("click", (event) => {
             setCoordinates((prevCoordinates) => {
