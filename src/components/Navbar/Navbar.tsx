@@ -1,6 +1,4 @@
-import React from 'react';
 import Logo from '../../assets/plotchain_logo.png';
-import { Button } from "@/components/ui/button"
 import WalletButton from '../WalletButton/WalletButton';
 
 

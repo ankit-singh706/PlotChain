@@ -1,6 +1,5 @@
 import React from 'react';
 import { useWallet } from '@/context/WalletContext';
-import { Button } from '../ui/button';
 import MapComponent from '../Map/Map';
 
 const HomePage: React.FC = () => {
@@ -12,6 +11,7 @@ const HomePage: React.FC = () => {
             <Button size="lg">Mark your plot</Button>
         </div> */}
         <MapComponent/>
+        {console.log(address)}
         </>
         
   );

@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { MarkerLayout } from "@maptiler/marker-layout";
+import { useRef, useState, useEffect } from 'react';
 import { GeocodingControl } from "@maptiler/geocoding-control/react";
 import maplibregl from 'maplibre-gl';
 import { createMapLibreGlMapController } from "@maptiler/geocoding-control/maplibregl-controller";

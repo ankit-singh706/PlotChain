@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ethers } from 'ethers';
 
 interface WalletContextType {
   address: string | null;
