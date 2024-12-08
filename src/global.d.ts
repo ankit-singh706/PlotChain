@@ -1,3 +1,4 @@
+import { ExternalProvider } from "@ethersproject/providers";
 declare global {
     interface Window {
       ethereum?: any; // Declare `window.ethereum` to be any

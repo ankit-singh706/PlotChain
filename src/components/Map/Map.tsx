@@ -9,8 +9,9 @@ import './map.css';
 import * as turf from "@turf/turf";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from '../ui/button';
+import SmartContract from '@/utils/smartContract';
 
-const MapComponent = () => {
+const MapComponent = ({onClick}:any) => {
     const [API_KEY] = useState('XhmiunjhJU7iuFvSBpDZ');
     const [mapController, setMapController] = useState<ReturnType<typeof createMapLibreGlMapController> | undefined>(undefined);
     const mapContainer = useRef(null);
@@ -43,15 +44,15 @@ const MapComponent = () => {
 
         if (mapContainer.current) {
             map.current = new maplibregl.Map({
-              container: mapContainer.current,
-              style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
-              center: [india.lng, india.lat],
-              zoom: zoom,
+                container: mapContainer.current,
+                style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
+                center: [india.lng, india.lat],
+                zoom: zoom,
             });
         }
 
         map.current?.addControl(new maplibregl.NavigationControl(), 'top-right');
-        
+
         if (map.current) {
             const controller = createMapLibreGlMapController(map.current, maplibregl);
             setMapController(controller);
@@ -193,20 +194,20 @@ const MapComponent = () => {
                 </div>
             </div>}
             <div ref={mapContainer} className="map" />
-            {selectedArea != 0 && 
-            <div className='info_container'>
-                <div className="info">
-                <Alert>
-                    <AlertTitle>Selected area (in square metres) : {selectedArea}</AlertTitle>
-                    <AlertDescription>
-                        Midpoint coordinates : {midPoint?.lat}, {midPoint?.lng}
-                    </AlertDescription>
-                </Alert>
-                </div>
-                <div className="mint">
-                    <Button>Mint Plot</Button>
-                </div>
-            </div>}
+            {selectedArea != 0 &&
+                <div className='info_container'>
+                    <div className="info">
+                        <Alert>
+                            <AlertTitle>Selected area (in square metres) : {selectedArea}</AlertTitle>
+                            <AlertDescription>
+                                Midpoint coordinates : {midPoint?.lat}, {midPoint?.lng}
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                    <div className="mint" onClick={onClick}>
+                        <Button>Mint Plot</Button>
+                    </div>
+                </div>}
 
         </div>
     );
