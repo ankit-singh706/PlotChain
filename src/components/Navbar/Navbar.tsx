@@ -27,7 +27,7 @@ const Navbar = ({ }: NavbarProps) => {
             wallets={wallets}
             connectModal={{ size: "compact" }}
           />
-          <p>Wallet address: {JSON.stringify(account)}</p>
+          {/* <p>Wallet address: {JSON.stringify(account)}</p> */}
 
           {/* <SmartContract/> */}
         </div>
