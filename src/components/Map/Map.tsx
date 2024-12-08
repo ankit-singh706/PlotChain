@@ -12,7 +12,6 @@ import { Button } from '../ui/button';
 import { TransactionButton } from "thirdweb/react";
 import { createThirdwebClient, getContract, prepareContractCall } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
-import { MarkerLayout } from "@maptiler/marker-layout";
 import MintLandABI from '@/utils/mintLand';
 
 
@@ -177,6 +176,9 @@ const MapComponent = () => {
     const resetMarkers = () => {
         setCoordinates([]);
         setMessage("");
+        setZoning("");
+        setValuation(10000);
+        setAdditionalInfo("Buying this place for fun")
         map.current?.remove();
         window.location.reload();
     };

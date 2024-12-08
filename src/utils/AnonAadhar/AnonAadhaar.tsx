@@ -9,6 +9,8 @@ import { useProver } from "@anon-aadhaar/react";
     useEffect(() => {
       console.log("Anon Aadhaar status: ", anonAadhaar.status);
     }, [anonAadhaar]);
+
+    console.log(AnonAadhaarProof,latestProof)
   
     return (
         <>
@@ -17,6 +19,7 @@ import { useProver } from "@anon-aadhaar/react";
         {/* <p>{anonAadhaar?.status}</p> */}
       </div>
       <div >
+        
         {/* Render the proof if generated and valid */}
         {/* {anonAadhaar?.status === "logged-in" && (
           <>

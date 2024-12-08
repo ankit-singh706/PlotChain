@@ -1,8 +1,7 @@
 import React from 'react';
-import { useWallet } from '@/context/WalletContext';
 import MapComponent from '../Map/Map';
 
-const HomePage: React.FC = ({onClick}:any) => {
+const HomePage: React.FC = () => {
     // const {address} = useWallet();
 
     return (
@@ -10,7 +9,7 @@ const HomePage: React.FC = ({onClick}:any) => {
         {/* <div className="home">
             <Button size="lg">Mark your plot</Button>
         </div> */}
-        <MapComponent onClick={onClick} />
+        <MapComponent/>
         {/* {console.log(address)} */}
         </>
         
