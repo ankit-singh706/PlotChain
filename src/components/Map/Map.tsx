@@ -9,9 +9,14 @@ import './map.css';
 import * as turf from "@turf/turf";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from '../ui/button';
-import SmartContract from '@/utils/smartContract';
+import { TransactionButton } from "thirdweb/react";
+import { createThirdwebClient, getContract, prepareContractCall } from "thirdweb";
+import { defineChain } from "thirdweb/chains";
+import { MarkerLayout } from "@maptiler/marker-layout";
+import MintLandABI from '@/utils/mintLand';
 
-const MapComponent = ({onClick}:any) => {
+
+const MapComponent = () => {
     const [API_KEY] = useState('XhmiunjhJU7iuFvSBpDZ');
     const [mapController, setMapController] = useState<ReturnType<typeof createMapLibreGlMapController> | undefined>(undefined);
     const mapContainer = useRef(null);
@@ -26,18 +31,10 @@ const MapComponent = ({onClick}:any) => {
         null
     );
     const map = useRef<maplibregl.Map | null>(null);
-
-
-    // const showAlert = () => {
-    //     <Alert>
-    //         <Terminal className="h-4 w-4" />
-    //         <AlertTitle>Heads up!</AlertTitle>
-    //         <AlertDescription>
-    //             You can add components and dependencies to your app using the cli.
-    //         </AlertDescription>
-    //     </Alert>
-    // }
-
+    const [zoning, setZoning] = useState("Residential");
+    const [valuation, setValuation] = useState(100000);
+    const [additionalInfo, setAdditionalInfo] = useState("Buying this place for fun");
+    const [isMinted,setIsMinted] = useState(false)
 
     useEffect(() => {
         if (map.current) return; // stops map from intializing more than once
@@ -97,7 +94,28 @@ const MapComponent = ({onClick}:any) => {
 
     }, [API_KEY, india.lng, india.lat, zoom]);
 
-    console.log(coordinates)
+    //Handles the creation of polygon layers
+    // useEffect(() => {
+    //     if (isMinted && midPoint) {
+    //         // Initialize the MapTiler map
+    //         const map = new maplibregl.Map({
+    //             container: 'map', // The ID of the container element
+    //             style: `https://api.maptiler.com/maps/streets/style.json?key=${API_KEY}`,
+    //             center: [midPoint.lng, midPoint.lat], // Coordinates for the center
+    //             zoom: 10,
+    //         });
+
+    //         // Add a marker at the midpoint coordinates
+    //         const marker = new maplibregl.Marker()
+    //             .setLngLat([midPoint.lng, midPoint.lat])
+    //             .setPopup(new maplibregl.Popup().setText('Transaction Location'))
+    //             .addTo(map);
+
+    //         // Optionally, you can customize the marker with your layout
+    //         marker.getElement().style.width = '50px'; // Example: Adjust marker size
+    //         marker.getElement().style.height = '50px';
+    //     }
+    // }, [isMinted, midPoint]);
 
     useEffect(() => {
         if (coordinates.length === 6) {
@@ -162,6 +180,19 @@ const MapComponent = ({onClick}:any) => {
         map.current?.remove();
         window.location.reload();
     };
+    const client = createThirdwebClient({
+        clientId: "cd71db82c3d6bdfb840ddb6fe7adf689",
+    });
+
+    const contract = getContract({
+        client,
+        chain: defineChain(84532),
+        address: "0xb2a671c4FE3D9269C84644Eb789B63958f917EC3",
+        abi: MintLandABI as any,
+    });
+
+
+
 
 
     return (
@@ -204,8 +235,29 @@ const MapComponent = ({onClick}:any) => {
                             </AlertDescription>
                         </Alert>
                     </div>
-                    <div className="mint" onClick={onClick}>
-                        <Button>Mint Plot</Button>
+                    <div className="mint">
+                        {!isMinted ? <TransactionButton
+                            transaction={() => {
+                                const tx = prepareContractCall({
+                                    contract,
+                                    method: "function mintLand(address to, string memory tokenURI, uint256 area, string memory coordinates, string memory zoning, uint256 valuation, string memory additionalInfo)",
+                                    params: ["0x02005126FfcB4e008cf83B07609825F46e757789", "otkenuri",BigInt(Math.floor(selectedArea)),  midPoint ? midPoint.toString() : "", zoning, BigInt(valuation), additionalInfo],
+                                });
+                                return tx;
+                            }}
+                            onTransactionSent={(result) => {
+                                console.log("Transaction submitted", result.transactionHash);
+                            }}
+                            onTransactionConfirmed={(receipt) => {
+                                console.log("Transaction confirmed", receipt.transactionHash);
+                                setIsMinted(true)
+                            }}
+                            onError={(error) => {
+                                console.error("Transaction error", error);
+                            }}
+                        >
+                            Mint Plot
+                        </TransactionButton>: <Button className='bg-green-400'  variant="secondary">Minted!</Button>}
                     </div>
                 </div>}
 

@@ -56,3 +56,9 @@ nav{
     align-items: center;
     justify-content: space-between;
 }
+
+.auth_buttons{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
